@@ -4,22 +4,18 @@ Code in support of the article "On the Shortest Principal Ideal Problem over Kum
 extensions".
 
 ## Authors
-Andrea Lesavourey, T Plantard, W Susilo.
+Andrea Lesavourey, Thomas Plantard, Willy Susilo.
 
 ## Softwares
 The code has been tested with Magma V2.24-9.
-
 
 
 ## Warning
 This code does not come with any guarantee. 
 
 
-## ACKNOWLEDGMENTS:
-We *deeply* thank Olivier Bernard from who we got the inspiration for the code
-organisation.
-
-
+## ACKNOWLEDGMENTS
+We *deeply* thank Olivier Bernard from who we got the inspiration for the organisation of the scripts. 
 
 
 ## How to use scripts?
