@@ -1,11 +1,15 @@
 # SPIP over Kummer extensions
 
 Code in support of the article "On the Shortest Principal Ideal Problem over Kummer 
-extensions"
+extensions".
 
-Authors: Andrea Lesavourey, T Plantard, W Susilo.
+## Authors
+Andrea Lesavourey, T Plantard, W Susilo.
 
+## Softwares
 The code has been tested with Magma V2.24-9.
+
+
 
 ## Warning
 This code does not come with any guarantee. 
@@ -14,6 +18,8 @@ This code does not come with any guarantee.
 ## ACKNOWLEDGMENTS:
 We *deeply* thank Olivier Bernard from who we got the inspiration for the code
 organisation.
+
+
 
 
 ## How to use scripts?
