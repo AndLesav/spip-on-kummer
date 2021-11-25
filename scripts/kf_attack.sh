@@ -1,0 +1,78 @@
+#!/bin/bash
+
+if (( $# < 4 )); then
+    # echo -e "\x1b[31m[Err]\x1b[0m Data directory ${DATA_DIR} does not exist.";
+    echo -e  "\033[31merror in $0:\033[0m need at least 3 argument";
+    echo "....kf_units.h EXP LENGTH_MAX PRIME_1 ... PRIME_2";
+    echo "    ....EXP: field exponent";
+    echo "    ....LENGTH_MAX: max sequence length defining the field";
+    echo "    ....RED_VERSION: reduction used : lll or bkz";
+    echo "    ....PRIME_i: first prime of a sequence defining the field";
+    exit;
+fi
+
+
+EXP=$1;
+LENGTH_MAX=$2;
+RED_VERSION=$3
+
+# Script folder
+EXE_DIR=$(dirname $(readlink -f $0));
+DATA_ROOT=$(dirname ${EXE_DIR});
+DATA_ROOT="../";
+DATA_DIR="${DATA_ROOT}/data_kf";
+LOGS_DIR="${DATA_ROOT}/logs_kf";
+
+
+# Just check that parent folders are indeed where they should be
+[[ ! -d ${DATA_DIR} ]] && {
+    echo -e "\x1b[31m[Err]\x1b[0m Data directory ${DATA_DIR} does not exist.";
+    exit 1;
+};
+
+[[ ! -d ${LOGS_DIR} ]] && {
+    echo -e "\x1b[31m[Err]\x1b[0m Logs directory ${LOGS_DIR} does not exist.";
+    exit 1;
+};
+
+for ((i=2; i<=LENGTH_MAX; i++)); do
+    
+    echo "FIELD_EXP := ${EXP};" > "HEAD_FILE";
+    echo "LENGTH := ${i};" >> "HEAD_FILE";
+    echo "RED_VERSION := \"${RED_VERSION}\";" >> "HEAD_FILE";
+
+    
+    primes="[$4";
+    for ((j=5; j<=$#; j++)); do
+	primes="${primes},${!j}";
+    done;
+    primes="${primes}]";
+
+    echo "PRIMES := ${primes};" >> "HEAD_FILE";
+    
+    cat "HEAD_FILE" "kf_attack.m" > "kf_attack_${EXP}_${i}_${RED_VERSION}.m";
+done;
+
+for ((i=2; i<=LENGTH_MAX; i++)); do
+    magma "kf_attack_${EXP}_${i}_${RED_VERSION}.m" 1>"${LOGS_DIR}/kf.attack_${EXP}_${i}_${RED_VERSION}" 2>&1 &
+done;
+
+
+# # Compute approached log-S-Unit lattices
+# for m in "$@"; do
+#     nf="z$m";
+
+#     d=0; until ! [[ -f "${DATA_DIR}/${nf}/${nf}_d$(($d+1)).urs" ]]; do d=$(($d+1)); done;
+#     # Determine whether we have precomputed S-units
+#     if [[ -f "${DATA_DIR}/${nf}/${nf}_d$d.su" ]];  then su="su=true";   else su="su=false"; fi;
+#     # Determine whether we have saturated elements
+#     if [[ -f "${DATA_DIR}/${nf}/${nf}_d$d.sat" ]]; then sat="sat=true"; else sat="sat=false"; fi;
+
+#     # for di in `seq 1 1 $d`; do
+#     for di in `seq 1 1 1`; do
+#         echo "Simulate IdSVP Solve using Tw-PHS for Q(z$m) [orb=#$di,$sat,$su]";
+#         sage ${EXE_DIR}/approx_factor.sage ${DATA_DIR} $nf $di $sat $su 1>${LOGS_DIR}/$nf.aflog_$di 2>&1 &
+#     done;
+# done;
+
+exit 0;
