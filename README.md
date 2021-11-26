@@ -37,7 +37,7 @@ to produce data as in the article, one should do as follows.
 1. Compute desired units with:
    - *bash kf_units.sh p r_max reduc  m1 ... mt* for Kummer fields with one
    exp
-   - *bash kf_units.sh <q> <n> <reduc> <p> <r_max> <m1> ... <ms>* for Kummer fields with two
+   - **bash kf_units.sh q n reduc p r_max m1 ... ms** for Kummer fields with two
    exp
 
    <r_max> is the max length for which the units will be computed (starting from r=2),
