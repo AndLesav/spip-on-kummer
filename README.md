@@ -95,7 +95,7 @@ The scripts print "temporary" files in the "scripts" directory that can been cle
 by :  bash ./clean.sh
 
 
-### Summary of the directories list from root
+### Summary of the directories from root
  "./src": Most functions
  "./scripts": Bash/magma scripts + magma functions for experiments in data_and_tests.m
  "./data_kf": data for Kummer fields with one exponent
