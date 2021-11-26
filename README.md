@@ -76,7 +76,7 @@ Only for Kummer extensions with one exponent:
 
 
 4. Compute the enumeration costs with:
-   - bash kf_enum_cost.sh <p> <r>  <m1> ... <mt> for Kummer fields with one
+   - bash kf_enum_cost.sh p r  m1 ... mt for Kummer fields with one
    exp
 
    Both type of reductions are treated. Print files for data are of the form
