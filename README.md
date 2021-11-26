@@ -14,7 +14,7 @@ The code has been tested with Magma V2.24-9.
 This code does not come with any guarantee. 
 
 
-## ACKNOWLEDGMENTS
+### ACKNOWLEDGMENTS
 We *deeply* thank Olivier Bernard from who we got the inspiration for the organisation of the scripts. 
 
 
