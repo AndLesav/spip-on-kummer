@@ -35,7 +35,7 @@ From the root directory, go in the directory "./scripts/" then,
 to produce data as in the article, one should do as follows.
 
 1. Compute desired units with:
-   - bash kf_units.sh <p> <r_max> <reduc> <m1> ... <mt> for Kummer fields with one
+   - bash kf_units.sh "<p> <r_max> <reduc> <m1> ... <mt>" for Kummer fields with one
    exp
    - bash kf_units.sh <q> <n> <reduc> <p> <r_max> <m1> ... <ms> for Kummer fields with two
    exp
