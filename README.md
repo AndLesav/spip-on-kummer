@@ -21,7 +21,7 @@ We *deeply* thank Olivier Bernard from who we got the inspiration for the organi
 ## How to use scripts?
 
 For a Kummer extension of the form L = K (sqrt[p]{m1}, ... sqrt[p]{mr}) with
-$K = \mathbb{Q}(\sqrt[q]{n1}, ..., \sqrt[q]{ms})$, our scripts allows to compute the unit group,
+K = QQ(sqrt[q]{n1}, ..., sqrt[q]{ms}), our scripts allows to compute the unit group,
 simulate attacks as described in the paper, and evaluate the quality of the bases
 obtained in the cases where:
 - mi and nj are prime integers
