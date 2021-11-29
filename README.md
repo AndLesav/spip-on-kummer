@@ -105,6 +105,6 @@ by :  bash ./clean.sh
  
 
 ## License
-&copy; 2021, Andrea Lesavourey, Thomas Plantard, Willy Susilo.  
+&copy; 2021, Andrea Lesavourey.  
 This work is published under the GNU General Public License (GPL) v3.0.  
 See the LICENSE file for complete statement.
