@@ -72,7 +72,7 @@ if field_dim lt 400 then
 	rank := r1+r2-1;
 	scaled_vol := Exp(Log(RU)/rank);
         
-	delete MU;
+	delete LU;
 	
 	NUMBER_SUCCESS := 0;
 	NUMBER_SHORTER := 0;
