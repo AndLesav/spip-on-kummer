@@ -35,15 +35,15 @@ From the root directory, go in the directory "./scripts/" then,
 to produce data as in the article, one should do as follows.
 
 1. Compute desired units with:
-   - **bash kf_units.sh p r_max reduc  m1 ... mt** for Kummer fields with one
+   - `bash kf_units.sh <p> <r_max> <reduc>  <m1> ... <mt>` for Kummer fields with one
    exp
-   - **bash kf_units.sh q n reduc p r_max m1 ... ms** for Kummer fields with two
+   - `bash kf_units.sh <q> <n> <reduc> <p> <r_max> <m1> ... <ms>` for Kummer fields with two
    exp
 
    <r_max> is the max length for which the units will be computed (starting from r=2),
    and each <mi> is the starting prime integer of a field defining sequence: for
    example if one uses the command
-                      **bash kf_units.sh 3 3 lll 2 3 5**
+                      `bash kf_units.sh 3 3 lll 2 3 5`
    then two processes will be launched in parallel: one computing the units of
    fields of the form QQ(sqrt[3]{p1}, sqrt[3]{p2}) and the other fields of the form
    QQ(sqrt[3]{p1}, sqrt[3]{p2}, sqrt[3]{p3}) , where p1 = m1, m2 and m3 successively.
@@ -58,9 +58,9 @@ to produce data as in the article, one should do as follows.
 Then if 1. has been completed, one can:
 
 2. Launch attacks with:
-   - **bash kf_attack.sh p r reduc m1 ... mt** for Kummer fields with one
+   - `bash kf_attack.sh <p> <r> <reduc> <m1> ... <mt>` for Kummer fields with one
    exp
-   - **bash ke_attack.sh p r reduc m1 ... mt** for Kummer fields with one
+   - `bash ke_attack.sh <p> <r> <reduc> <m1> ... <mt>` for Kummer fields with one
    exp
 
    Print files follow the same rules as explained for units.
@@ -69,14 +69,14 @@ Then if 1. has been completed, one can:
 Only for Kummer extensions with one exponent:
 
 3. Compute some orthogonality parameters with:
-   - **bash kf_eval_geo.sh p r reduc m1 ... mt** for Kummer fields with one
+   - `bash kf_eval_geo.sh <p> <r> <reduc> <m1> ... <mt>` for Kummer fields with one
    exp
 
    Print files for data are of the form  ortho_param_*
 
 
 4. Compute the enumeration costs with:
-   - **bash kf_enum_cost.sh p r  m1 ... mt** for Kummer fields with one
+   - `bash kf_enum_cost.sh <p> <r>  <m1> ... <mt>` for Kummer fields with one
    exp
 
    Both type of reductions are treated. Print files for data are of the form
@@ -84,7 +84,7 @@ Only for Kummer extensions with one exponent:
 
 
 5. Compute enumeration costs and orthogonality parameters for cyclotomic fields with:
-   - **magma general_fields.m > log_file_of_your_choice**
+   - `magma general_fields.m > log_file_of_your_choice`
 
    One need to modify this file to choose from prime or powers-of-2 conductors.
    Print files for data are in ../data_cyclo/
@@ -92,7 +92,7 @@ Only for Kummer extensions with one exponent:
 
 
 The scripts print "temporary" files in the "scripts" directory that can been cleaned up
-by :  bash ./clean.sh
+by :  `bash ./clean.sh`
 
 
 ### Summary of the directories from root
