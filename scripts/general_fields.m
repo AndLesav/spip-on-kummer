@@ -35,9 +35,7 @@ for q in Q do
     end for;
 end for;
 
-/* P := Q; */
 Sort(~P);
-print P;
 		
 file_cyclo_basis := "../data_cyclo/data_cyclo_basis" cat "_" cat TYPE_LOG cat "_" cat s_file cat IntegerToString(E);
 file_cyclo_key := "../data_cyclo/data_cyclo_key" cat "_" cat TYPE_LOG cat "_" cat s_file cat IntegerToString(E);
@@ -61,17 +59,12 @@ for q in P do
 
     RC := Sqrt(Determinant(Lattice(Matrix(CL))));
     
-    /* scaled_vol := Root(RC, Rank(Matrix(CL))); */
     scaled_vol := Exp(Log(RC)/Rank(Matrix(CL)));
     
     c := Stats_log_norm_proj(K, 0, 500, RC: size_set:=500, p:=1/2, n:=10, shape:="uni", supp:=1, file:="", type_log := TYPE_LOG);
-    /* print c; */
     
     r := #CL;
-    /* M := IdentityMatrix(RationalField(), r); */
     N := [CL[i] : i in [1..r]];
-    /* N := (2^5)*Matrix(N); */
-    /* N := HorizontalJoin(M, N); */
     N := Matrix(N);
     N := RowSubmatrixRange(LLL(N: Delta:=0.99), 1, Rank(N));
     
@@ -85,3 +78,5 @@ for q in P do
     fprintf FILE, "%o  %o  %o  %o  %o  %o  %o  %o  %o  %o \n", EulerPhi(q), RR!scaled_vol, RR!hf[1][1], RR!hf[1][2], RR!hf[2][1], RR!hf[2,2], RR!enum[1][1], RR!enum[1][2], RR!enum[2][1], RR!enum[2][2];
     delete FILE;
 end for;
+
+exit;
