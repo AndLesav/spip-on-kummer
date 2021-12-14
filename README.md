@@ -1,7 +1,7 @@
 # SPIP over Kummer extensions
 
 Code in support of the article "On the Short Principal Ideal Problem over Kummer 
-extensions".
+extensions" https://eprint.iacr.org/2021/1623
 
 ## Authors
 Andrea Lesavourey.
