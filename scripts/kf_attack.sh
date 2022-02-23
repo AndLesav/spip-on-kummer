@@ -57,22 +57,4 @@ for ((i=2; i<=LENGTH_MAX; i++)); do
     magma "kf_attack_${EXP}_${i}_${RED_VERSION}.m" 1>"${LOGS_DIR}/kf.attack_${EXP}_${i}_${RED_VERSION}" 2>&1 &
 done;
 
-
-# # Compute approached log-S-Unit lattices
-# for m in "$@"; do
-#     nf="z$m";
-
-#     d=0; until ! [[ -f "${DATA_DIR}/${nf}/${nf}_d$(($d+1)).urs" ]]; do d=$(($d+1)); done;
-#     # Determine whether we have precomputed S-units
-#     if [[ -f "${DATA_DIR}/${nf}/${nf}_d$d.su" ]];  then su="su=true";   else su="su=false"; fi;
-#     # Determine whether we have saturated elements
-#     if [[ -f "${DATA_DIR}/${nf}/${nf}_d$d.sat" ]]; then sat="sat=true"; else sat="sat=false"; fi;
-
-#     # for di in `seq 1 1 $d`; do
-#     for di in `seq 1 1 1`; do
-#         echo "Simulate IdSVP Solve using Tw-PHS for Q(z$m) [orb=#$di,$sat,$su]";
-#         sage ${EXE_DIR}/approx_factor.sage ${DATA_DIR} $nf $di $sat $su 1>${LOGS_DIR}/$nf.aflog_$di 2>&1 &
-#     done;
-# done;
-
 exit 0;
