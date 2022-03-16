@@ -37,13 +37,13 @@ to produce data as in the article, one should do as follows.
 1. Compute desired units with:
    - `bash kf_units.sh <p> <r_max> <reduc>  <m1> ... <mt>` for Kummer fields with one
    exp
-   - `bash kf_units.sh <q> <n> <reduc> <p> <r_max> <m1> ... <ms>` for Kummer fields with two
+   - `bash ke_units.sh <q> <n> <reduc> <p> <r_max> <m1> ... <ms>` for Kummer fields with two
    exp
 
    <r_max> is the max length for which the units will be computed (starting from r=2),
    and each <mi> is the starting prime integer of a field defining sequence: for
    example if one uses the command
-                      `bash kf_units.sh 3 3 lll 2 3 5`
+                      `bash kf_units.sh 3 3 lll m1 m2`
    then two processes will be launched in parallel: one computing the units of
    fields of the form QQ(sqrt[3]{p1}, sqrt[3]{p2}) and the other fields of the form
    QQ(sqrt[3]{p1}, sqrt[3]{p2}, sqrt[3]{p3}) , where p1 = m1, m2 and m3 successively.
