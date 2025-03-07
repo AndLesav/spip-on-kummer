@@ -46,7 +46,7 @@ if field_dim lt 400 then
 	/* defining files names */
 	file_end := (&cat ["_" cat IntegerToString(d[i]) : i in [1..#d]]) cat "__" cat IntegerToString(FIELD_EXP) cat "_" cat RED_VERSION;
 	file_units := "../data_kf/UNITS/units" cat file_end;
-	file_data := "../data_kf/attack_" cat IntegerToString(FIELD_EXP) cat "_" cat IntegerToString(LENGTH) cat "_" cat RED_VERSION;
+	file_data := "../data_kf/attack_norm_magma_" cat IntegerToString(FIELD_EXP) cat "_" cat IntegerToString(LENGTH) cat "_" cat RED_VERSION;
 	
 
 	/* reading file where units are kept */

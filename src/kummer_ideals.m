@@ -310,11 +310,13 @@ KF_ideal_norm_list := function(g, field_sequence, field_exponent:Ideal_norms_lis
 	m_0 := Prune(Prune(field_sequence));
 	beta := ZeroSequence(Integers(), n);
 	field_basis := KF_primefree_basis(field_sequence, field_exponent);
+
 	for i := 0 to (field_exponent-1) do
 	    /* define morphism beta which is sigma_(n-1)sigma_n^i */
 	    beta[n-1] := 1;			
 	    beta[n] := i;
-	    /* define subextension = Inv(beta) */
+
+	    /* define subextension = K^beta */
 	    subfield_sequence := m_0 cat [ms^(-i mod field_exponent)*mt];
 	    subfield_basis := KF_primefree_basis(subfield_sequence, field_exponent);
 	    g_norm := KF_norm_morphism_simple(g, beta, field_sequence, field_exponent);
@@ -327,10 +329,12 @@ KF_ideal_norm_list := function(g, field_sequence, field_exponent:Ideal_norms_lis
 	    end if;
 	    Ideal_norms_list := $$(g_norm, subfield_sequence, field_exponent:Ideal_norms_list:=Ideal_norms_list);
 	end for;
+
 	/* define morphism beta which is sigma_(n-1)sigma_n^i */
 	beta[n-1] := 0;			
 	beta[n] := 1;
-	/* define subextension = Inv(beta) */
+
+	/* define subextension = K^beta */
 	subfield_sequence := m_0 cat [ms];
 	subfield_basis := KF_primefree_basis(subfield_sequence, field_exponent);
 	index := Index(Ideal_norms_list, subfield_sequence);
@@ -346,6 +350,124 @@ KF_ideal_norm_list := function(g, field_sequence, field_exponent:Ideal_norms_lis
     return Ideal_norms_list;
 end function;    
 
+
+
+/* 
+ * Creation of relative norm of ideals needed in computation.
+ * Ideal `I` is assumed to be given as a sequence of 1 or 2 elements.
+*/
+KF_ideal_norm_list_magma := function (I, field_sequence, field_exponent : Ideal_norms_list := [* [* *], [* *] *])
+    ZZ<x> := PolynomialRing(Integers());
+    
+    /* Kummer field structure */
+    kf := <field_sequence, field_exponent>;
+    
+    Ideal_norms_list := Ideal_norms_list;
+
+    if #field_sequence eq 1 then
+	return Ideal_norms_list;
+    else
+	n := #field_sequence;
+	ms := field_sequence[n-1];
+	mt := field_sequence[n];
+	m_0 := Prune(Prune(field_sequence));
+	sigma := ZeroSequence(Integers(), n);
+	field_basis := KF_primefree_basis(field_sequence, field_exponent);
+
+
+	/* Compute 2 elts rep of ideal if `I` is given by 1 element only */
+	if #I eq 1 then
+	    ideal := KF_IntegralBasis_creation(I[1], field_sequence, field_exponent);
+	    ideal := Kummer_Ideal_two_elements(ideal, kf);
+	else
+	    ideal := I;
+	end if;
+	
+	for i := 0 to (field_exponent-1) do
+	    print i+1, " th subfield";
+	    /* define morphism beta which is sigma_(n-1)sigma_n^i */
+	    sigma[n-1] := 1;
+	    sigma[n] := i;
+	    
+	    /* define subextension = K^beta */
+	    subfield_sequence := m_0 cat [ms^(-i mod field_exponent)*mt];
+	    subfield_basis := KF_primefree_basis(subfield_sequence, field_exponent);
+	    
+	    index := Index(Ideal_norms_list, field_sequence);
+
+	    if index eq 0 then
+		
+		/* creation of necessary structures  */
+		kf_sub := <subfield_sequence, field_exponent>;
+		kf_new := <subfield_sequence cat [kf[1][#kf[1]-1]], kf[2]>;
+		K := KF_creation(kf_sub[1], kf_sub[2]);
+		L := ext<K | x^kf[2]-kf[1][#kf[1]-1]>;
+		K1 := AbsoluteField(K);
+		
+		OL := MaximalOrder(L); /* assume L is not too large */
+		OK := MaximalOrder(K1);
+		q<y> := PolynomialRing(OK);
+		
+		ideal_tmp := [KF_coord_perm_elt(_j, kf_new, kf) : _j in ideal];
+		ideal_tmp := [Vector_to_NFelement1(_g, kf_new[1], kf[2]: KF:=L) : _g in ideal_tmp];
+
+		J := ideal < OL | ideal_tmp >;
+		J := Norm(J);
+
+		alpha, beta := TwoElement(J);
+
+		
+		
+		Append(~Ideal_norms_list[1], subfield_sequence);
+		Append(~Ideal_norms_list[2], [NFelement_to_vector1(K!alpha, kf_sub[1], kf_sub[2]), NFelement_to_vector1(K!beta, kf_sub[1], kf_sub[2])]);
+	    end if;
+
+	    Ideal_norms_list := $$([K!alpha, K!beta], subfield_sequence, field_exponent:Ideal_norms_list:=Ideal_norms_list);
+	end for;
+
+	/* define morphism beta which is sigma_(n-1)sigma_n^i */
+	sigma[n-1] := 0;
+	sigma[n] := 1;
+
+
+	
+	/* define subextension = K^beta */
+	subfield_sequence := m_0 cat [ms];
+	subfield_basis := KF_primefree_basis(subfield_sequence, field_exponent);
+	index := Index(Ideal_norms_list, subfield_sequence);
+
+	if index eq 0 then
+	    
+	    /* creation of necessary structures  */
+	    kf_sub := <subfield_sequence, field_exponent>;
+	    kf_new := <subfield_sequence cat [kf[1][#kf[1]]], kf[2]>;
+	    
+	    K := KF_creation(kf_sub[1], kf_sub[2]);
+	    L := ext<K | x^kf[2]-kf[1][#kf[1]]>;
+	    K1 := AbsoluteField(K);
+	    
+	    OL := MaximalOrder(L); /* assume L is not too large */
+	    OK := MaximalOrder(K1);
+	    q<y> := PolynomialRing(OK);
+	    
+	    ideal_tmp := [KF_coord_perm_elt(_j, kf_new, kf) : _j in ideal];
+	    ideal_tmp := [Vector_to_NFelement1(_g, kf_new[1], kf[2]: KF:=L) : _g in ideal_tmp];
+	    J := ideal < OL | ideal_tmp >;
+	    J := Norm(J);
+	    alpha, beta := TwoElement(J);
+	    
+	    
+	    
+	    Append(~Ideal_norms_list[1], subfield_sequence);
+	    Append(~Ideal_norms_list[2], [NFelement_to_vector1(K!alpha, kf_sub[1], kf_sub[2]), NFelement_to_vector1(K!beta, kf_sub[1], kf_sub[2])]);
+	end if;
+
+	    Ideal_norms_list := $$([K!alpha, K!beta], subfield_sequence, field_exponent:Ideal_norms_list:=Ideal_norms_list);
+
+    end if;
+    
+    return Ideal_norms_list;
+end function;
 
 
 
@@ -574,12 +696,15 @@ KF_PIP_integralbasis := function(I, field_sequence, field_exponent, basis_free, 
 	index := Index(Units_List1[1], field_sequence);
 	if index ne 0 then
 	    U := Units_List1[2, index];
+	    print "units given";
 	else
 	    U := KF_units_real(field_sequence, field_exponent, precision_log, false);
 	    Append(~Units_List1[1], field_sequence);
 	    Append(~Units_List1[2], U);
+	    print "units computed";
 	end if;
     end if;
+    print "After units";
     n := #field_sequence;
     field_dim := field_exponent^n;
     p<x> := PolynomialRing(RationalField());

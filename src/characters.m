@@ -55,7 +55,7 @@ Relative_EnoughCharacters := function(U, ground_field, extension)
     C_ext := [1 : i in [1..ext_length]];
     M := [];
     q := 2;
-    /* while (#Q lt (r + 5*ext_dim+ground_length^ground_field[2])) do */
+    
     while (#Q lt Round(3*r)+Round(2*Sqrt(r))+ext_dim+ground_length^ground_field[2]) do
 	q := Relative_one_good_prime(ground_field, extension, C_ground, C_ext, q);
 	F_q := GF(q);

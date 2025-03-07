@@ -315,9 +315,6 @@ KF_attack_naive := function(K, number_keys, size_key: red_method:="lll")
     
     file_herm_fact := "./Data_kummer/hermite_fact_naive" cat "_" cat IntegerToString(field_exponent) cat "_" cat red_method;
     
-    /* herm_fact_key := []; */
-    /* herm_fact_retrieved := []; */
-
     RR := RealField(6);
 
     L := KF_creation(K[1], K[2]);
@@ -342,8 +339,6 @@ KF_attack_naive := function(K, number_keys, size_key: red_method:="lll")
 	print "after bkz";
 	N := Norms(B);
 
-	/* n_min, ind := Min(N); */
-	
 	n_min := Max(Norms(B))+1;
 	b_min := ZeroSequence(Rationals(), dim);
 	
@@ -360,7 +355,6 @@ KF_attack_naive := function(K, number_keys, size_key: red_method:="lll")
 	    end if;
 	end for;
 
-	
 	
 	time_attack +:= Cputime(t);
 
@@ -382,7 +376,6 @@ KF_attack_naive := function(K, number_keys, size_key: red_method:="lll")
 	    
 	end if;
 
-
 	print "hermite factor of shortest vector is: ", RR!Root(Sqrt(Min(Norms(B)))/sv, dim);
     
 
@@ -394,4 +387,120 @@ KF_attack_naive := function(K, number_keys, size_key: red_method:="lll")
     end for;
     
     return number_success, number_generators;
+end function;
+
+
+
+
+KF_attack_norm_magma := function(K, number_keys, size_key, U, precision_log, norms_bool: p:=1/2, n:=10, shape:="uni", supp:=1, list:=[*[* *], [* *]*], lattice:=1, uni:=1, precision:=1, decoding_method:="lll", enum_cost:=false, red_version:="lll")
+    number_success := 0;
+    number_shorter := 0;
+
+    time_attack := 0;
+    time_norm := 0;
+    time_decoding := 0;
+    time_alg_recons := 0;
+
+    count := 0;
+    dim := KF_dimension(K);
+    d := K[1];
+    field_exponent:=K[2];
+    norms_proj := [];
+    ec := [];
+    
+    approx_factors := [];
+    af := [];
+
+    file_herm_fact := "./Data_kummer/hermite_fact" cat "_" cat IntegerToString(field_exponent) cat "_" cat red_version cat "_" cat IntegerToString(precision_log);
+    
+
+    RR := RealField(6);
+    
+    for j:= 1 to number_keys do
+	print j, "th key !";
+	g := Keygen(size_key, dim: length_supp := supp, shape:=shape, p:=p, n:=n, kum_field:=<>);
+	B := KF_IntegralBasis_creation(g, d, field_exponent);
+	
+	t := Cputime();
+	basis_free := KF_primefree_basis(d, field_exponent);
+	norms_list :=  KF_ideal_norm_list_magma([g], d, K[2]);
+
+	print "norm computed";
+	
+	if enum_cost then
+	    Lg := ChangeUniverse(KF_Log_embedding(g, K[1], K[2], precision), RealField(150));
+	    n_g := My_proj_norm(Lg, 1: type:="flat");
+	    if n_g ne 0 then
+		Append(~norms_proj, n_g);
+	    end if;
+	end if;
+
+	print "JUST BEFORE ATTACK";
+	a, time_vec, precision, lattice, uni := KF_PIP_integralbasis(B, d, field_exponent, basis_free, precision_log, U: Units_List:=list, Norms_List:=norms_list, norms_bool:= norms_bool, precision:=precision, lattice:=lattice, uni:=uni, red_method:=decoding_method, bool:=true);
+	
+	time_attack +:= Cputime(t);
+	time_norm +:= time_vec[1];
+	time_decoding +:= time_vec[2];
+	time_alg_recons +:= time_vec[3];
+	
+	b := CanChangeUniverse(a[1], Integers());
+	approx_factor := RealField(6)!Sqrt(Norm(Vector(a[1]))/Norm(Vector(g)));
+	if b eq true then
+    	    if ((Vector(a[1]) eq Vector(g)) or (Vector(a[1]) eq -Vector(g))) then
+    		number_success +:= 1;
+		/* Append(~approx_factors, approx_factor); */
+            elif approx_factor lt 1 then
+    		number_shorter +:=1;
+		Append(~approx_factors, approx_factor);
+	    else
+		Append(~approx_factors, approx_factor);
+	    end if;
+	else
+	    Append(~approx_factors, approx_factor);
+	end if;
+	
+	print "Number of keys retrieved: ", number_success, " over ", j, "\n";
+	print "Number of shorter keys retrieved: ", number_shorter, " over ", j, "\n";
+	print "Average time for attack is: ", RealField(5)!(time_attack/j), "\n";
+	print "Average time for decoding is: ", RealField(5)!(time_decoding/j), "\n";
+	print "Average time for reconstruction is: ", RealField(5)!(time_alg_recons/j), "\n";
+	if (not norms_bool) then
+    	    print "Average time for norm computation is: ", RealField(5)!(time_norm/j), "\n";
+	end if;
+
+	/* sv := Root(AbsoluteValue(AbsoluteNorm(Vector_to_NFelement1(g, d, field_exponent))), dim); */
+	/* print Sqrt(Norm(Vector(g)))/sv; */
+
+	/* Append(~herm_fact_key, Root(Sqrt(Norm(Vector(g)))/sv, dim)); */
+	/* Append(~herm_fact_retrieved, Root(Sqrt(Norm(Vector(a[1])))/sv, dim)); */
+	
+	/* print herm_fact_key[j]; */
+	/* print herm_fact_retrieved[j]; */
+
+	/* FILE := Open(file_herm_fact, "a"); */
+	/* fprintf FILE, "%o \t %o \n", RR!Root(Sqrt(Norm(Vector(g)))/sv, dim), RR!Root(Sqrt(Norm(Vector(a[1])))/sv, dim); */
+	/* delete FILE; */
+	
+        Sort(~norms_proj);
+        Sort(~approx_factors);
+
+        if #approx_factors gt 10 then
+            af := [approx_factors[1], approx_factors[#approx_factors div 4], approx_factors[#approx_factors div 2], approx_factors[3*(#approx_factors div 4)], approx_factors[#approx_factors]];
+	    print af;
+	end if;
+    end for;
+    
+    Sort(~norms_proj);
+    Sort(~approx_factors);
+
+    if #approx_factors gt 10 then
+	af := [approx_factors[1], approx_factors[#approx_factors div 4], approx_factors[#approx_factors div 2], approx_factors[3*(#approx_factors div 4)], approx_factors[#approx_factors]];
+    end if;
+    
+    if enum_cost then
+	ec := [norms_proj[1], norms_proj[number_keys div 2], norms_proj[#norms_proj]];
+	ec := [Log(2, EnumerationCost(LogLattice_creation(U), ec[i]^2)) : i in [1..#ec]];
+    end if;
+
+    return [number_success, number_shorter], ec, af, precision, lattice, uni;
 end function;

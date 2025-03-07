@@ -156,7 +156,7 @@ end function;
 /* prime-power free QQ basis */
 KF_primefree_basis := function(field_sequence, field_exponent:list_primes := [])
     basis := KF_naive_basis(field_sequence, field_exponent);
-    return PrimeFreeSequence(basis, field_exponent:list_primes := list_primes);
+    return PrimeFreeSequence(basis, field_exponent : list_primes := list_primes);
 end function;  
 
 
